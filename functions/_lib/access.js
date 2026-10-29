@@ -1,3 +1,12 @@
+// Prototype mode: public survey workspace without login. This service identity is internal only.
+export async function surveyActor(env) {
+  const id = '00000000-0000-4000-8000-000000000001';
+  await env.DB.prepare(
+    "INSERT OR IGNORE INTO users (id, username, password_hash, password_salt, role, display_name, is_active) VALUES (?, 'survey-system', 'disabled-login', 'disabled-login', 'admin', 'ระบบสำรวจ', 1)"
+  ).bind(id).run();
+  return { id, username: 'survey-system', display_name: 'ระบบสำรวจ', role: 'admin' };
+}
+
 export async function projectRole(env, user, projectId) {
   if (user.role === 'admin') return 'admin';
   const r = await env.DB.prepare('SELECT role FROM project_members WHERE project_id = ? AND user_id = ?').bind(projectId, user.id).first();
