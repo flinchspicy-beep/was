@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID, pbkdf2Sync } from 'node:crypto';
+import { randomBytes, randomUUID, pbkdf2Sync } from 'node:crypto';
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 import { writeFile } from 'node:fs/promises';
