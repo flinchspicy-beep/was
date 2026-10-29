@@ -58,7 +58,7 @@ let currentUser = null;
 const ROLE_TH = { admin: 'ผู้ดูแลระบบ', project_manager: 'ผู้จัดการโครงการ', surveyor: 'ผู้สำรวจ', approver: 'ผู้อนุมัติ' };
 function showAuth(state, user) {
   $('#sessionBox').hidden = state !== 'session';
-  $('#setupForm').hidden = state !== 'setup';
+  $('#adminSetupNote').hidden = state !== 'no-admin';
   $('#loginForm').hidden = state !== 'login';
   if (user) { $('#whoami').textContent = `${user.display_name} · ${ROLE_TH[user.role] || user.role}`; currentUser = user; }
   $('#workspace').hidden = state !== 'session';
@@ -68,14 +68,14 @@ async function loadAuth() {
   const me = await api('/api/auth/me');
   if (me.ok) return showAuth('session', me.data.user);
   const st = await api('/api/setup/status');
-  showAuth(st.data?.setupRequired ? 'setup' : 'login');
+  showAuth(st.data?.setupRequired ? 'no-admin' : 'login');
 }
-for (const id of ['#setupForm', '#loginForm']) {
+for (const id of ['#loginForm']) {
   $(id).addEventListener('submit', async e => {
     e.preventDefault();
     const form = e.currentTarget, err = form.querySelector('.form-error'), btn = form.querySelector('button');
     err.textContent = ''; btn.disabled = true;
-    const res = await api(id === '#setupForm' ? '/api/setup/admin' : '/api/auth/login', 'POST', Object.fromEntries(new FormData(form)));
+    const res = await api('/api/auth/login', 'POST', Object.fromEntries(new FormData(form)));
     btn.disabled = false;
     if (!res.ok) { err.textContent = res.data.message || 'ดำเนินการไม่สำเร็จ'; return; }
     form.reset(); showAuth('session', res.data.user);
