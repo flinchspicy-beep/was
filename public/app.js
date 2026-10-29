@@ -118,9 +118,12 @@ $('#gpsButton').addEventListener('click', () => {
 $('#projectSelect').addEventListener('change', loadProject);
 $('#projectForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const res = await api('/api/projects', 'POST', { id: uid(), ...Object.fromEntries(new FormData(e.currentTarget)) });
+  // เก็บฟอร์มไว้ก่อน await เพราะ e.currentTarget จะเป็น null หลังจบ event dispatch
+  const form = e.currentTarget;
+  const res = await api('/api/projects', 'POST', { id: uid(), ...Object.fromEntries(new FormData(form)) });
   if (!res.ok) return alert(res.data.message || 'สร้างโครงการไม่สำเร็จ');
-  e.currentTarget.reset(); loadProjects();
+  form.reset();
+  await loadProjects();
 });
 $('#pointForm').addEventListener('submit', async e => {
   e.preventDefault();
