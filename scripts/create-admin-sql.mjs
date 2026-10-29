@@ -15,20 +15,20 @@ async function askHidden(prompt) {
     let value = '';
     const onData = chunk => {
       for (const ch of chunk.toString('utf8')) {
-        if (ch === '\\u0003') {
+        if (ch === String.fromCharCode(3)) {
           cleanup();
           reject(new Error('ยกเลิกแล้ว'));
           return;
         }
-        if (ch === '\\r' || ch === '\\n') {
+        if (ch === String.fromCharCode(13) || ch === String.fromCharCode(10)) {
           cleanup();
-          stdout.write('\\n');
+          stdout.write(String.fromCharCode(10));
           resolve(value);
           return;
         }
-        if (ch === '\\u007f' || ch === '\\b') {
+        if (ch === String.fromCharCode(127) || ch === String.fromCharCode(8)) {
           value = value.slice(0, -1);
-        } else if (ch >= ' ' && ch !== '\\u001b') {
+        } else if (ch >= ' ' && ch !== String.fromCharCode(27)) {
           value += ch;
         }
       }
