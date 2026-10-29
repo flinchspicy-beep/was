@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pea-watsing-shell-v6';
+const CACHE_NAME = 'pea-watsing-shell-v7';
 const SHELL = ['/', '/styles.css', '/app.js', '/manifest.webmanifest'];
 
 self.addEventListener('install', event => {
