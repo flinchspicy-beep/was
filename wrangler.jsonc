@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "survey-watsing-test",
+  "pages_build_output_dir": "./public",
+  "compatibility_date": "2026-10-29",
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "survey-watsing-test-db",
+      "database_id": "9d3ae13d-5df8-40bc-9975-14ec3e6acc62",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

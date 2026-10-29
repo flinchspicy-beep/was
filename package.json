@@ -1,0 +1,15 @@
+{
+  "name": "pea-watsing-distribution-survey",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev --compatibility-date=2026-10-29",
+    "deploy:pages": "wrangler pages deploy public --project-name survey-watsing-test",
+    "db:local": "wrangler d1 migrations apply survey-watsing-test-db --local",
+    "db:remote": "wrangler d1 migrations apply survey-watsing-test-db --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
