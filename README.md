@@ -80,3 +80,8 @@ The Cloudflare Pages project and D1 database have been created for this bundle.
 6. Create the first administrator using the app's setup flow and the `SETUP_TOKEN` you set. Use a unique username and a password of at least 12 characters.
 
 The script sets the Pages secret, applies the D1 migrations, and deploys `public/` together with the Pages Functions. Do not share the setup token. Do not use real field data until the authentication, permissions, backup/recovery, and workflows have been reviewed and tested.
+
+### Cloudflare dashboard deployment
+
+The repository-linked build must deploy this as a Pages project, not a Worker. Use this deploy command:
+`npx wrangler pages deploy public --project-name survey-watsing-test`.
