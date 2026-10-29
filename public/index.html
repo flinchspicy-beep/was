@@ -27,17 +27,7 @@
       <div id="apiStatus" class="notice" role="status">กำลังตรวจสอบ API...</div>
     </section>
 
-    <section id="authPanel" class="panel auth-panel" aria-live="polite">
-      <div id="sessionBox" hidden><div class="eyebrow">เข้าสู่ระบบแล้ว</div><h2 id="whoami"></h2><button id="logoutButton" class="button button-secondary" type="button">ออกจากระบบ</button></div>
-      <form id="loginForm" hidden><div class="eyebrow">SIGN IN</div><h2>เข้าสู่ระบบ</h2>
-        <label>ชื่อผู้ใช้<input name="username" required autocomplete="username"></label>
-        <label>รหัสผ่าน<input name="password" type="password" required autocomplete="current-password"></label>
-        <button class="button button-primary" type="submit">เข้าสู่ระบบ</button><div class="form-error" role="alert"></div>
-      </form>
-      <p id="adminSetupNote" class="muted" hidden>ยังไม่มีบัญชีผู้ดูแลระบบ กรุณาให้ผู้ดูแลระบบที่ได้รับอนุญาตสร้างบัญชีผ่านเครื่องมือดูแลฐานข้อมูลที่ปลอดภัย</p>
-    </section>
-
-    <section id="workspace" class="panel auth-panel" hidden>
+      <section id="workspace" class="panel auth-panel">
       <div class="eyebrow">SURVEY</div><h2>งานสำรวจ</h2>
       <div id="queueNote" class="notice" hidden></div>
       <label>โครงการ<select id="projectSelect"></select></label>
@@ -73,6 +63,6 @@
     <section class="panel next-panel"><div><div class="eyebrow">DEVELOPMENT PLAN</div><h2>ขั้นตอนถัดไป</h2><p>พัฒนาฟังก์ชันสำรวจภาคสนาม การจัดการสิทธิ์ และรายงานต่อจากโครงสร้างระบบปัจจุบัน</p></div><div class="phase-number">01</div></section>
     <footer>ระบบสำรวจระบบจำหน่ายไฟฟ้า · กฟส.วัดสิงห์ <span>Prototype / ยังไม่ใช่ระบบภาคสนาม</span></footer>
   </main>
-  <script src="/app.js?v=20261029-2" defer></script>
+  <script src="/app.js?v=20261029-3" defer></script>
 </body>
 </html>
