@@ -54,37 +54,9 @@ async function api(path, method = 'GET', body) {
     return { ok: r.ok, data: await r.json().catch(() => ({})) };
   } catch { return { ok: false, data: { message: 'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้' } }; }
 }
-let currentUser = null;
-const ROLE_TH = { admin: 'ผู้ดูแลระบบ', project_manager: 'ผู้จัดการโครงการ', surveyor: 'ผู้สำรวจ', approver: 'ผู้อนุมัติ' };
-function showAuth(state, user) {
-  $('#sessionBox').hidden = state !== 'session';
-  $('#adminSetupNote').hidden = state !== 'no-admin';
-  $('#loginForm').hidden = state !== 'login';
-  if (user) { $('#whoami').textContent = `${user.display_name} · ${ROLE_TH[user.role] || user.role}`; currentUser = user; }
-  $('#workspace').hidden = state !== 'session';
-  if (state === 'session') initWorkspace();
-}
-async function loadAuth() {
-  const me = await api('/api/auth/me');
-  if (me.ok) return showAuth('session', me.data.user);
-  const st = await api('/api/setup/status');
-  showAuth(st.data?.setupRequired ? 'no-admin' : 'login');
-}
-for (const id of ['#loginForm']) {
-  $(id).addEventListener('submit', async e => {
-    e.preventDefault();
-    const form = e.currentTarget, err = form.querySelector('.form-error'), btn = form.querySelector('button');
-    err.textContent = ''; btn.disabled = true;
-    const res = await api('/api/auth/login', 'POST', Object.fromEntries(new FormData(form)));
-    btn.disabled = false;
-    if (!res.ok) { err.textContent = res.data.message || 'ดำเนินการไม่สำเร็จ'; return; }
-    form.reset(); showAuth('session', res.data.user);
-  });
-}
-$('#logoutButton').addEventListener('click', async () => { await api('/api/auth/logout', 'POST'); loadAuth(); });
+let currentUser = { id: '00000000-0000-4000-8000-000000000001', username: 'survey-system', display_name: 'ระบบสำรวจ', role: 'admin' };
 updateConnection();
 checkApi();
-loadAuth();
 
 // ===== งานสำรวจ =====
 const uid = () => crypto.randomUUID();
@@ -168,3 +140,6 @@ $('#spanForm').addEventListener('submit', async e => {
 });
 function initWorkspace() { if (inited) return; inited = true; renderQueue(); loadProjects(); if (navigator.onLine) flush(); }
 window.addEventListener('online', () => { if (inited) flush(); });
+
+// Public prototype mode: open survey workspace directly without sign-in.
+initWorkspace();
