@@ -85,3 +85,8 @@ The script sets the Pages secret, applies the D1 migrations, and deploys `public
 
 The repository-linked build must deploy this as a Pages project, not a Worker. Use this deploy command:
 `npx wrangler pages deploy public --project-name survey-watsing-test`.
+
+
+## Deployment configuration note
+
+Cloudflare build settings use `npx wrangler pages deploy public --project-name survey-watsing-test` because this repository is deployed as a Cloudflare Pages project, not a standalone Worker.
