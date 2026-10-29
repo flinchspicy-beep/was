@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
 Write-Host "Survey Wat Sing - Cloudflare Pages deployment" -ForegroundColor Cyan
@@ -17,11 +17,6 @@ npm install
 if ($LASTEXITCODE -ne 0) { throw "npm install ล้มเหลว" }
 
 Write-Host ""
-Write-Host "ขั้นตอนนี้จะเปิดให้กำหนด SETUP_TOKEN ซึ่งใช้สร้างบัญชีผู้ดูแลระบบครั้งแรก" -ForegroundColor Yellow
-Write-Host "ตั้งค่าเป็นค่าสุ่มยาวอย่างน้อย 24 ตัวอักษร และเก็บไว้เป็นความลับ"
-npx wrangler pages secret put SETUP_TOKEN --project-name survey-watsing-test
-if ($LASTEXITCODE -ne 0) { throw "ตั้งค่า SETUP_TOKEN ไม่สำเร็จ" }
-
 Write-Host ""
 Write-Host "กำลังติดตั้งโครงสร้างตารางฐานข้อมูลบน Cloudflare D1..."
 npm run db:remote
@@ -34,4 +29,5 @@ if ($LASTEXITCODE -ne 0) { throw "Deploy ไม่สำเร็จ" }
 
 Write-Host ""
 Write-Host "เสร็จแล้ว ตรวจสอบ https://survey-watsing-test.pages.dev/api/health และ /api/setup/status"
-Write-Host "ก่อนใช้งานจริง ให้ทดสอบสร้างผู้ดูแลระบบและการเข้าสู่ระบบก่อน"
+Write-Host "หากยังไม่มีผู้ใช้ ให้สร้าง SQL ผู้ดูแลบนเครื่องที่ได้รับอนุญาตด้วย: node ./scripts/create-admin-sql.mjs"
+Write-Host "จากนั้นตรวจสอบ SQL แล้วนำไปรันกับ D1 ที่ถูกต้องตามคำแนะนำใน README"
