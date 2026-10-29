@@ -90,3 +90,6 @@ The repository-linked build must deploy this as a Pages project, not a Worker. U
 ## Deployment configuration note
 
 Cloudflare build settings use `npx wrangler pages deploy public --project-name survey-watsing-test` because this repository is deployed as a Cloudflare Pages project, not a standalone Worker.
+
+
+<!-- Cloudflare Pages deployment trigger: project connected to survey-watsing-app. -->
