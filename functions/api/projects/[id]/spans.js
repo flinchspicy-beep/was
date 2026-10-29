@@ -1,13 +1,13 @@
-import { requireUser, json, fail } from '../../../_lib/auth.js';
-import { projectRole, canWrite, audit, isId, haversine } from '../../../_lib/access.js';
+import { json, fail } from '../../../_lib/auth.js';
+import { projectRole, canWrite, audit, isId, haversine, surveyActor } from '../../../_lib/access.js';
 export async function onRequestGet(ctx) {
-  const u = await requireUser(ctx); if (u instanceof Response) return u;
+  const u = await surveyActor(ctx.env);
   if (!(await projectRole(ctx.env, u, ctx.params.id))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์ในโครงการนี้');
   const { results } = await ctx.env.DB.prepare('SELECT id, from_point_id, to_point_id, voltage_class, work_action, wire_type, wire_size, measured_length_m, coordinate_length_m, length_source FROM spans WHERE project_id = ?').bind(ctx.params.id).all();
   return json({ ok: true, spans: results });
 }
 export async function onRequestPost(ctx) {
-  const u = await requireUser(ctx); if (u instanceof Response) return u;
+  const u = await surveyActor(ctx.env);
   const pid = ctx.params.id;
   if (!canWrite(await projectRole(ctx.env, u, pid))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์บันทึกข้อมูลในโครงการนี้');
   const b = await ctx.request.json().catch(() => ({}));
