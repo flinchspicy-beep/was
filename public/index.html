@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d3328">
+  <meta name="description" content="ระบบสำรวจระบบจำหน่ายไฟฟ้า การไฟฟ้าส่วนภูมิภาคสาขาวัดสิงห์">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/styles.css">
+  <title>ระบบสำรวจระบบจำหน่ายไฟฟ้า | กฟส.วัดสิงห์</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">PEA</div>
+    <div class="brand-copy"><strong>ระบบสำรวจระบบจำหน่ายไฟฟ้า</strong><span>การไฟฟ้าส่วนภูมิภาคสาขาวัดสิงห์</span></div>
+    <span id="connectionBadge" class="status-pill">กำลังตรวจสอบ</span>
+  </header>
+  <main class="page-shell">
+    <section class="hero panel">
+      <div class="eyebrow">DISTRIBUTION SURVEY WORKSPACE</div>
+      <h1>สำรวจเป็นระบบ<br><span>ข้อมูลพร้อมใช้งาน</span></h1>
+      <p>พื้นที่ทำงานสำหรับสำรวจเสาไฟฟ้า แนวสาย อุปกรณ์ประกอบ และจัดทำ BOQ ในโครงการเดียวกัน</p>
+      <div class="hero-actions">
+        <button id="installButton" class="button button-secondary" hidden>เพิ่มไอคอนบนหน้าจอ</button>
+        <button id="refreshButton" class="button button-primary">ตรวจสอบการเชื่อมต่อ</button>
+      </div>
+      <div id="apiStatus" class="notice" role="status">กำลังตรวจสอบ API...</div>
+    </section>
+
+    <section id="authPanel" class="panel auth-panel" aria-live="polite">
+      <div id="sessionBox" hidden><div class="eyebrow">เข้าสู่ระบบแล้ว</div><h2 id="whoami"></h2><button id="logoutButton" class="button button-secondary" type="button">ออกจากระบบ</button></div>
+      <form id="setupForm" hidden autocomplete="off"><div class="eyebrow">FIRST-TIME SETUP</div><h2>สร้างผู้ดูแลระบบคนแรก</h2>
+        <label>รหัสตั้งค่าเริ่มต้น (SETUP_TOKEN)<input name="setupToken" type="password" required></label>
+        <label>ชื่อผู้ใช้<input name="username" required minlength="3" maxlength="40" autocomplete="username"></label>
+        <label>ชื่อที่แสดง<input name="displayName" required maxlength="100"></label>
+        <label>รหัสผ่าน (อย่างน้อย 12 ตัว)<input name="password" type="password" required minlength="12" autocomplete="new-password"></label>
+        <button class="button button-primary" type="submit">สร้างผู้ดูแล</button><div class="form-error" role="alert"></div></form>
+      <form id="loginForm" hidden><div class="eyebrow">SIGN IN</div><h2>เข้าสู่ระบบ</h2>
+        <label>ชื่อผู้ใช้<input name="username" required autocomplete="username"></label>
+        <label>รหัสผ่าน<input name="password" type="password" required autocomplete="current-password"></label>
+        <button class="button button-primary" type="submit">เข้าสู่ระบบ</button><div class="form-error" role="alert"></div></form>
+    </section>
+
+    <section id="workspace" class="panel auth-panel" hidden>
+      <div class="eyebrow">SURVEY</div><h2>งานสำรวจ</h2>
+      <div id="queueNote" class="notice" hidden></div>
+      <label>โครงการ<select id="projectSelect"></select></label>
+      <form id="projectForm" hidden><label>สร้างโครงการใหม่ (ชื่อ)<input name="name" required maxlength="150"></label><label>พื้นที่<input name="areaName" maxlength="150"></label><button class="button button-secondary" type="submit">สร้างโครงการ</button></form>
+      <div id="projectBody" hidden>
+        <form id="pointForm"><h3>บันทึกจุด</h3>
+          <button id="gpsButton" class="button button-secondary" type="button">อ่านตำแหน่ง GPS</button>
+          <div id="gpsInfo" class="muted">ยังไม่ได้อ่านตำแหน่ง</div>
+          <label>รหัสเสา/จุด<input name="pointCode" maxlength="40"></label>
+          <label>ประเภท<select name="pointType"><option value="pole">เสา</option><option value="transformer">หม้อแปลง</option><option value="meter">มิเตอร์</option><option value="other">อื่นๆ</option></select></label>
+          <label>สถานะ<select name="status"><option value="existing">เดิม</option><option value="new_installation">ติดตั้งใหม่</option><option value="removal">รื้อถอน</option></select></label>
+          <label>หมายเหตุ<input name="notes" maxlength="500"></label>
+          <button class="button button-primary" type="submit">บันทึกจุด</button><div class="form-error" role="alert"></div></form>
+        <h3>จุดที่สำรวจแล้ว</h3><ol id="pointList"></ol>
+        <form id="spanForm"><h3>บันทึกช่วงสาย</h3>
+          <label>จาก<select name="fromPointId" required></select></label><label>ถึง<select name="toPointId" required></select></label>
+          <label>แรงดัน<select name="voltageClass"><option value="low_voltage">แรงต่ำ</option><option value="high_voltage">แรงสูง</option></select></label>
+          <label>งาน<select name="workAction"><option value="existing">เดิม</option><option value="installation">ติดตั้งใหม่</option><option value="removal">รื้อถอน</option></select></label>
+          <label>ชนิดสาย<input name="wireType" maxlength="60"></label><label>ขนาดสาย<input name="wireSize" maxlength="60"></label>
+          <label>ความยาวที่วัดจริง (ม.) ถ้ามี<input name="measuredLength" type="number" min="0" step="0.01"></label>
+          <button class="button button-primary" type="submit">บันทึกช่วงสาย</button><div class="form-error" role="alert"></div></form>
+        <h3>ช่วงสาย</h3><ul id="spanList"></ul>
+      </div>
+    </section>
+
+    <section class="section-heading"><div><div class="eyebrow">WORKSPACE</div><h2>เมนูระบบ</h2></div><span class="muted">ระยะที่ 1 · โครงสร้างเริ่มต้น</span></section>
+    <section class="feature-grid" aria-label="เมนูระบบ">
+      <article class="feature-card"><div class="feature-icon">⌖</div><h3>สำรวจแผนที่</h3><p>เตรียมระบบหมุด GPS และแนวสายไฟ</p><span class="feature-state">กำหนดไว้ในระยะถัดไป</span></article>
+      <article class="feature-card"><div class="feature-icon">▤</div><h3>รายการเสาและอุปกรณ์</h3><p>จัดเก็บข้อมูลเสา อุปกรณ์เดิม และรายการติดตั้งใหม่</p><span class="feature-state">กำหนดโครงสร้างฐานข้อมูลแล้ว</span></article>
+      <article class="feature-card"><div class="feature-icon">∑</div><h3>สรุป BOQ</h3><p>แยกรื้อถอน ติดตั้งใหม่ และวัสดุคงเหลือ</p><span class="feature-state">กำหนดกติกาแล้ว</span></article>
+      <article class="feature-card"><div class="feature-icon">◇</div><h3>โมเดล 3 มิติ</h3><p>แสดงเสา อุปกรณ์ และสายไฟก่อน/หลัง</p><span class="feature-state">กำหนดเทคโนโลยีแล้ว</span></article>
+    </section>
+    <section class="panel next-panel"><div><div class="eyebrow">DEVELOPMENT PLAN</div><h2>ขั้นตอนถัดไป</h2><p>ตั้งค่า D1 และ migration จากนั้นพัฒนาการสร้างผู้ดูแลคนแรก การเข้าสู่ระบบ และสิทธิ์โครงการ ก่อนเริ่มฟังก์ชันสำรวจภาคสนาม</p></div><div class="phase-number">01</div></section>
+    <footer>ระบบสำรวจระบบจำหน่ายไฟฟ้า · กฟส.วัดสิงห์ <span>Prototype / ยังไม่ใช่ระบบภาคสนาม</span></footer>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>
